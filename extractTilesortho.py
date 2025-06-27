@@ -18,6 +18,137 @@ from tqdm import tqdm
 
 import utils
 
+def extractTileFiles(folder, ext='jpg'):
+    '''
+    Extract the tiles that are marked for a labeler to RGB images for LabelMe
+    :param folder: The parent folder where individual labeler folders will be made to store the images
+    :param ext: option to save the image tiles as 'jpg', 'png' or 'tif' format (only 1 or 3 channels are allowed).
+    :return: None
+    '''
+
+    folder = Path(folder)
+    load_dotenv()
+    outputfolder = Path(os.environ['workdirectory'])
+    
+    # get all tif files & open them
+    #tifs = [
+    #    folder / str(os.environ['name_ortho_stitch'])
+    #]
+    tifs = utils.getTifFiles(folder)
+
+    sources = [rio.open(f) for f in tifs]
+
+    # get tile file
+    tilefile = os.path.join(outputfolder, name_tile_file)
+    df = gpd.read_file(tilefile)
+    lTiledf = df[df['Labeler'] >= 1].copy()  # non-labelled
+    lTiledf.reset_index(inplace=True)
+
+    for idx, tiledf in tqdm(lTiledf.iterrows(), desc='Extracting tiles', total=len(lTiledf), unit='tile'):
+        poly = tiledf.geometry
+        # extract RGB tile
+        tile, out_trans = merge(sources, bounds=poly.bounds, precision=50)
+        # print(tile.shape)
+        # save & reload file to convert the ndarray to rasterio dataset
+        out_meta = sources[0].meta.copy()
+
+        out_meta.update({"driver": "GTiff",
+                         "height": tile.shape[1],
+                         "width": tile.shape[2],
+                         "transform": out_trans,
+                         "dtype": "float32" # Ensure 32-bit dtype
+                         })
+        num_chan = out_meta['count']
+        if num_chan > 3:
+            out_meta.update({"count": 3})
+
+        # 1) make image file & path if necessary
+        imgfile = '{}.{}'.format(tiledf['TileID'], ext)
+        imgfile = outputfolder / 'Images' / 'Labeler{}'.format(tiledf['Labeler']) / imgfile
+        imgfile.parent.mkdir(exist_ok=True, parents=True)
+
+        # 2) write tile to imgfile
+        if ext == 'jpg':
+            tile = tile.swapaxes(0, 1).swapaxes(1, 2)
+            if np.max(tile) <= 1:
+                tile = tile.clip(0, 1)  # For single band. Remove non-data values. For NDVI, use .clip(-1,1)
+                image_min = tile.min(axis=(0, 1), keepdims=True)
+                image_max = tile.max(axis=(0, 1), keepdims=True)
+                tile = (255 * (tile - image_min) / (image_max - image_min)).astype(np.uint8)
+
+
+
+            if tile.shape[2] >= 3:
+                # tile = tile[..., :3] # RGB
+                tile = tile[..., [2, 1, 0]]  # BGR to RGB
+                #tile = tile[..., [4,1,0]] # false color image
+
+                # Enhance contrast using Contrast Stretching
+                #tile = exposure.rescale_intensity(tile, in_range="image")
+                p2, p98 = np.percentile(tile, (2, 98))
+                tile = exposure.rescale_intensity(tile, in_range=(p2, p98)) #in_range="image"
+                io.imsave(imgfile, tile)
+            elif tile.shape[2] == 1:
+                tile = tile.squeeze(axis=2)  # Remove single-channel axis
+                tile = Image.fromarray(tile, mode='L')  # Convert to 8-bit grayscale
+                tile = np.array(tile, dtype=np.uint8)  # Ensure it's 8-bit
+
+                #colormap = plt.cm.viridis(tile/255.0) # Normalize for colormap
+                #colormap = (colormap[:,:,:3]*255.0).astype(np.uint8) # Remove alpha & scale
+                io.imsave(imgfile, tile)
+            else:
+                print("Your tile has 2 channels.")
+
+        elif ext == 'png':
+            tile = tile.swapaxes(0, 1).swapaxes(1, 2)
+            if np.max(tile) <= 1:
+                tile = tile.clip(0, 1)  # Remove non-data values. For NDVI, use .clip(-1,1)
+                image_min = tile.min(axis=(0, 1), keepdims=True)
+                image_max = tile.max(axis=(0, 1), keepdims=True)
+                tile = (255 * (tile - image_min) / (image_max - image_min)).astype(np.uint8)
+
+            if tile.shape[2] >= 3:
+                # tile = tile[..., :3] # RGB
+                tile = tile[..., [2, 1, 0]]  # BGR to RGB
+                #tile = tile[..., [4,1,0]] # false color image
+
+                # Enhance contrast using Contrast Stretching
+                #tile = exposure.rescale_intensity(tile, in_range="image")
+                #p2, p98 = np.percentile(tile, (2, 98))
+                #tile = exposure.rescale_intensity(tile, in_range=(p2, p98)) #in_range="image"
+                io.imsave(imgfile, tile)
+            elif tile.shape[2] == 1:
+                tile = tile.squeeze(axis=2)  # Remove single-channel axis
+                tile = Image.fromarray(tile, mode='L')  # Convert to 8-bit grayscale
+                tile = np.array(tile, dtype=np.uint8)  # Ensure it's 8-bit
+                #colormap = plt.cm.viridis(tile / 255.0)  # Normalize for colormap
+                #colormap = (colormap[:, :, :3] * 255.0).astype(np.uint8)  # Remove alpha & scale
+                io.imsave(imgfile, tile)
+            else:
+                print("Your tile has 2 channels.")
+        else:
+            with rio.open(imgfile, "w", **out_meta) as dest:
+                num_channels = tile.shape[0]  # Get the number of channels in the tile
+
+                if num_channels == 1:
+                    tile = tile.astype(np.float32)  # Convert to 32-bit
+                    dest.write(tile)  # Write single-channel tile
+
+                elif num_channels >= 3:
+                    selected_bands = [2, 1, 0]  # Choose any three bands
+
+                    if max(selected_bands) < num_channels:  # Ensure selected bands exist
+                        new_tile = tile[selected_bands].astype(np.float32)  # Convert to 32-bit
+                        dest.write(new_tile)
+
+                    else:
+                        print(f"Invalid band selection. Available bands: {num_channels}")
+
+                else:
+                    print("Unexpected number of channels in the tile")
+
+
+
 
 def extractAllTiles(folder, ext='.jpg'):
     '''
@@ -69,7 +200,7 @@ def extractAllTiles(folder, ext='.jpg'):
 
         # 1) make image file & path if necessary
         imgfile = '{}.{}'.format(uid, ext)
-        imgfile = outputfolder / 'OrthoB_MS_winter_2023' / 'crop_clips' / imgfile
+        imgfile = outputfolder / 'OrthoB_MS_winter_2023' / 'crop_clips' / imgfile # To adapt
         imgfile.parent.mkdir(exist_ok=True, parents=True)
 
         # 2) write tile to imgfile
@@ -238,6 +369,11 @@ if __name__ == '__main__':
     load_dotenv()
     folder = os.environ['orthof']
     name_tile_file = 'Tiles_ortho.shp'
+
+    bExtractLabelTiles = False
+    if bExtractLabelTiles:
+        markTiles(folder, nTiles=int(os.environ['number_of_tiles_per_labeler']), nLabelers=int(os.environ['number_of_labelers']))
+        extractTileFiles(folder, ext='png')
 
     bExtractAllTiles = True
     if bExtractAllTiles:
