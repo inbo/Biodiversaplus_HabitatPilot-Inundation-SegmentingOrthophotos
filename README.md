@@ -16,9 +16,9 @@ pip install -r requirements.txt
 
 ### General processing steps
 1. Modify the hyperparameters in the .env file. 
-2. drawRaster.py: makes raster of tiles for DL model, select buffer to be large enough to cover full orthomosaic.
-3. correctRaster.py: remove empty boxes (with no pixels).
-4. extractTiles.py: crop the orthomosaic to the extent of every box.
+2. drawRasterortho.py: makes raster of tiles for DL model, select buffer to be large enough to cover full orthomosaic.
+3. correctRasterortho.py: remove empty boxes (with no pixels).
+4. extractTilesortho.py: crop the orthomosaic to the extent of every box.
 5. Label the images using labelme. Type following command in the terminal:
 
 ~~~shell
