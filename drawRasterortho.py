@@ -55,10 +55,10 @@ if __name__ == '__main__':
 
 
     tilesize = int(os.environ['tilesize'])
-    #tifs = [folder / f for f in os.listdir(folder) if f.endswith('.tif')]
-    tifs = [
-        folder / str(os.environ['name_ortho_stitch'])
-    ]
+    tifs = [folder / f for f in os.listdir(folder) if f.endswith('.tif')]
+    #tifs = [
+    #    folder / str(os.environ['name_ortho_stitch'])
+    #]
     print('Listed {} files'.format(len(tifs)))
 
     points = [
