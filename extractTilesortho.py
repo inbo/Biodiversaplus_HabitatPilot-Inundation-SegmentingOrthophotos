@@ -200,7 +200,7 @@ def extractAllTiles(folder, ext='.jpg'):
 
         # 1) make image file & path if necessary
         imgfile = '{}.{}'.format(uid, ext)
-        imgfile = outputfolder / 'OrthoB_MS_winter_2023' / 'crop_clips' / imgfile # To adapt
+        imgfile = outputfolder / 'Images' / 'All' / imgfile # To adapt
         imgfile.parent.mkdir(exist_ok=True, parents=True)
 
         # 2) write tile to imgfile
@@ -367,7 +367,7 @@ def markTiles(folder, fLabels=0.1, nTiles=None, nLabelers=10):
 
 if __name__ == '__main__':
     load_dotenv()
-    folder = os.environ['orthof']
+    folder = os.environ['orthofolder']
     name_tile_file = 'Tiles_ortho.shp'
 
     bExtractLabelTiles = False

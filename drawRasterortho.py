@@ -50,11 +50,11 @@ def calcTiles(regionBbox, delta, buffer=5):
 if __name__ == '__main__':
 
     load_dotenv()
-    folder = Path(os.environ['orthof'])
+    folder = Path(os.environ['orthofolder'])
     outputfolder = Path(os.environ['workdirectory'])
 
 
-    tilesize = int(os.environ['tz'])
+    tilesize = int(os.environ['tilesize'])
     tifs = [folder / f for f in os.listdir(folder) if f.endswith('.tif')]
     #tifs = [
     #    folder / str(os.environ['name_ortho_stitch'])
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     # build boxes of 512 x 512
     region = [(top, left), (bottom, right)]
     print('Region: ', region)
-    bboxes = calcTiles(region, delta=np.mean(deltas), buffer=12)
+    bboxes = calcTiles(region, delta=np.mean(deltas), buffer=5)
 
     # construct geodataframe
     # bbox = Polygon(bbox2poly([(top, left), (bottom, right)]))

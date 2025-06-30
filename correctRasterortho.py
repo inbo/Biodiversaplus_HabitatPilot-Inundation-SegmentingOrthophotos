@@ -67,7 +67,7 @@ def correctTiles(folder):
 if __name__ == '__main__':
 
     load_dotenv()
-    correctTiles(os.environ['orthof'])
+    correctTiles(os.environ['orthofolder'])
 
 
 
