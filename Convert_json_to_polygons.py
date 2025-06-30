@@ -13,7 +13,7 @@ def transform_points(points, img_bbox, img_width, img_height):
     x_scale = (xmax - xmin) / img_width
     y_scale = (ymax - ymin) / img_height
 
-    return [0.
+    return [
         (xmin + x * x_scale, ymax - y * y_scale)  # Flip y-axis
         for x, y in points
     ]
