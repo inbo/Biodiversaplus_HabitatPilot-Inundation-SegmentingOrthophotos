@@ -81,6 +81,7 @@ def extractTileFiles(folder, ext='jpg'):
             if tile.shape[2] >= 3:
                 # tile = tile[..., :3] # RGB
                 tile = tile[..., [2, 1, 0]]  # BGR to RGB
+                tile = np.array(tile, dtype=np.uint8)
                 #tile = tile[..., [4,1,0]] # false color image
 
                 # Enhance contrast using Contrast Stretching
@@ -110,6 +111,7 @@ def extractTileFiles(folder, ext='jpg'):
             if tile.shape[2] >= 3:
                 # tile = tile[..., :3] # RGB
                 tile = tile[..., [2, 1, 0]]  # BGR to RGB
+                tile = np.array(tile, dtype=np.uint8)
                 #tile = tile[..., [4,1,0]] # false color image
 
                 # Enhance contrast using Contrast Stretching
@@ -216,7 +218,8 @@ def extractAllTiles(folder, ext='.jpg'):
 
             if tile.shape[2] >= 3:
                 # tile = tile[..., :3] # RGB
-                tile = tile[..., [2, 1, 0]]  # BGR to RGB
+                tile = tile[..., [2, 1, 0]]  # BGR to RGB4
+                tile = np.array(tile, dtype=np.uint8)
                 #tile = tile[..., [4,1,0]] # false color image
 
                 # Enhance contrast using Contrast Stretching
@@ -246,6 +249,7 @@ def extractAllTiles(folder, ext='.jpg'):
             if tile.shape[2] >= 3:
                 # tile = tile[..., :3] # RGB
                 tile = tile[..., [2, 1, 0]]  # BGR to RGB
+                tile = np.array(tile, dtype=np.uint8)
                 #tile = tile[..., [4,1,0]] # false color image
 
                 # Enhance contrast using Contrast Stretching
