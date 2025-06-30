@@ -2,7 +2,8 @@ import os
 import json
 import geopandas as gpd
 from shapely.geometry import Polygon, box
-
+from pathlib import Path
+from dotenv import load_dotenv
 
 def transform_points(points, img_bbox, img_width, img_height):
     """
@@ -74,8 +75,15 @@ def process_json_and_save_shapefile(shapefile_path, folder_path, output_shapefil
 
 
 if __name__ == "__main__":
-    shapefile_path = 'G:/Mijn Drive/Dennensterfte/Labelme/Tiles_sel.shp'
-    folder_path = 'G:/Mijn Drive/Dennensterfte/Labelme/Images/All'
-    output_shapefile = 'G:/Mijn Drive/Dennensterfte/Labelme/Labeler2.shp'
+    
+    
+    
+    load_dotenv()
+    outputfolder = Path(os.environ['workdirectory'])
+    output_shapefile = outputfolder / "Labels.shp"
+
+    workdirectory = Path(os.environ['workdirectory'])
+    folder_path = workdirectory / 'Images' / 'All'
+    shapefile_path = workdirectory / 'Tiles_ortho.shp'
 
     process_json_and_save_shapefile(shapefile_path, folder_path, output_shapefile)
