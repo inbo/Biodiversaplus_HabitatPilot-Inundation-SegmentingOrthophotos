@@ -28,7 +28,7 @@ def extractTileFiles(folder, ext='jpg'):
 
     folder = Path(folder)
     load_dotenv()
-    outputfolder = Path(os.environ['workdirectory'])
+    outputfolder = Path(os.environ['Tilelocation'])
     
     # get all tif files & open them
     #tifs = [
@@ -161,7 +161,7 @@ def extractAllTiles(folder, ext='.jpg'):
     '''
     folder = Path(folder)
     load_dotenv()
-    outputfolder = Path(os.environ['workdirectory'])
+    outputfolder = Path(os.environ['Tilelocation'])
 
     # get all tif files & open them
     #tifs = [

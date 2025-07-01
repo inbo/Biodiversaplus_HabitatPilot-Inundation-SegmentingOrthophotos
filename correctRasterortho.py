@@ -30,10 +30,10 @@ def correctTiles(folder):
     df['bEmpty'] = False
 
     # get all tif files & open them
-    tifs = utils.getTifFiles(folder)
-    #tifs = [
-    #    folder / str(os.environ['name_ortho_stitch'])
-    #]
+    #tifs = utils.getTifFiles(folder)
+    tifs = [
+        folder / str(os.environ['name_ortho_stitch'])
+    ]
     sources = [rio.open(f) for f in tifs]
 
     # loop over all tiles & tag the empty ones
@@ -54,12 +54,12 @@ def correctTiles(folder):
     nonEmptyDf = df[df['bEmpty'] == False]
 
     #outfile = os.path.join(folder, 'NonEmptyTiles.shp') LabelersTiles
-    outfile = outputfolder / 'Tiles_ortho.shp'
+    outfile = outputfolder / 'Tiles_ortho_WB.shp'
     outfile.parent.mkdir(exist_ok=True, parents=True)
     nonEmptyDf.to_file(outfile)
 
     # and we make a backup
-    outfile = outputfolder / 'backup' / 'Tiles_ortho.shp'
+    outfile = outputfolder / 'backup' / 'Tiles_ortho_WB.shp'
     outfile.parent.mkdir(exist_ok=True, parents=True)
     outfile = str(outfile).replace('.shp', datetime.now().strftime('__%d%m%Y_%H%M.shp'))
     df.to_file(outfile)
