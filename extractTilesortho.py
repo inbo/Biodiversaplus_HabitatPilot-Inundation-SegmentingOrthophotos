@@ -29,7 +29,8 @@ def extractTileFiles(folder, ext='jpg'):
     folder = Path(folder)
     load_dotenv()
     outputfolder = Path(os.environ['Tilelocation'])
-    
+    outputfolder2 = Path(os.environ['workdirectory'])
+
     # get all tif files & open them
     #tifs = [
     #    folder / str(os.environ['name_ortho_stitch'])
@@ -39,7 +40,7 @@ def extractTileFiles(folder, ext='jpg'):
     sources = [rio.open(f) for f in tifs]
 
     # get tile file
-    tilefile = os.path.join(outputfolder, name_tile_file)
+    tilefile = os.path.join(outputfolder2, name_tile_file)
     df = gpd.read_file(tilefile)
     lTiledf = df[df['Labeler'] >= 1].copy()  # non-labelled
     lTiledf.reset_index(inplace=True)
@@ -162,6 +163,7 @@ def extractAllTiles(folder, ext='.jpg'):
     folder = Path(folder)
     load_dotenv()
     outputfolder = Path(os.environ['Tilelocation'])
+    outputfolder2 = Path(os.environ['workdirectory'])
 
     # get all tif files & open them
     #tifs = [
@@ -172,7 +174,7 @@ def extractAllTiles(folder, ext='.jpg'):
     sources = [rio.open(f) for f in tifs]
 
     # get tile file
-    tilefile = os.path.join(outputfolder, name_tile_file)
+    tilefile = os.path.join(outputfolder2, name_tile_file)
     allTiledf = gpd.read_file(tilefile)
 
     for idx, tiledf in tqdm(allTiledf.iterrows(), desc='Extracting tiles', total=len(allTiledf), unit='tile'):
@@ -202,7 +204,23 @@ def extractAllTiles(folder, ext='.jpg'):
 
         # 1) make image file & path if necessary
         imgfile = '{}.{}'.format(uid, ext)
-        imgfile = outputfolder / 'Images' / 'All' / imgfile # To adapt
+        imgfile = outputfolder / 'Schulensmeer' / '2020' / imgfile # To adapt
+        #imgfile = outputfolder / 'Schulensmeer' / '2021' / imgfile 
+        #imgfile = outputfolder / 'Schulensmeer' / '2023' / imgfile 
+        #imgfile = outputfolder / 'Schulensmeer' / '2024' / imgfile 
+
+        #imgfile = outputfolder / 'Webbekomsbroek' / '2020' / imgfile 
+        #imgfile = outputfolder / 'Webbekomsbroek' / '2021' / imgfile 
+        #imgfile = outputfolder / 'Webbekomsbroek' / '2023' / imgfile 
+        #imgfile = outputfolder / 'Webbekomsbroek' / '2024' / imgfile 
+
+        #imgfile = outputfolder / 'Kloosterbeemden' / '2020' / imgfile 
+        #imgfile = outputfolder / 'Kloosterbeemden' / '2021' / imgfile 
+        #imgfile = outputfolder / 'Kloosterbeemden' / '2023' / imgfile 
+        #imgfile = outputfolder / 'Kloosterbeemden' / '2024' / imgfile 
+        
+        
+        
         imgfile.parent.mkdir(exist_ok=True, parents=True)
 
         # 2) write tile to imgfile
@@ -372,7 +390,9 @@ def markTiles(folder, fLabels=0.1, nTiles=None, nLabelers=10):
 if __name__ == '__main__':
     load_dotenv()
     folder = os.environ['orthofolder']
-    name_tile_file = 'Tiles_ortho.shp'
+    name_tile_file = 'Tiles_ortho_SM_buffer.shp'
+    #name_tile_file = 'Tiles_ortho_WB_buffer.shp'
+    #name_tile_file = 'Tiles_ortho_KB_buffer.shp'
 
     bExtractLabelTiles = False
     if bExtractLabelTiles:
