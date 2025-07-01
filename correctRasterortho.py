@@ -54,11 +54,16 @@ def correctTiles(folder):
     nonEmptyDf = df[df['bEmpty'] == False]
 
     #outfile = os.path.join(folder, 'NonEmptyTiles.shp') LabelersTiles
+
+    # outfile = outputfolder / 'Tiles_ortho_KB.shp'
+    # outfile = outputfolder / 'Tiles_ortho_SM.shp'
     outfile = outputfolder / 'Tiles_ortho_WB.shp'
     outfile.parent.mkdir(exist_ok=True, parents=True)
     nonEmptyDf.to_file(outfile)
 
     # and we make a backup
+    # outfile = outputfolder / 'backup' / 'Tiles_ortho_KB.shp'
+    # outfile = outputfolder / 'backup' / 'Tiles_ortho_SM.shp'
     outfile = outputfolder / 'backup' / 'Tiles_ortho_WB.shp'
     outfile.parent.mkdir(exist_ok=True, parents=True)
     outfile = str(outfile).replace('.shp', datetime.now().strftime('__%d%m%Y_%H%M.shp'))
