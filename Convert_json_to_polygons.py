@@ -152,8 +152,8 @@ if __name__ == "__main__":
 
     # Step 2: Process label priority # Please ensure the names match your labels.
     label_map = {
-        3: "Inundated",
-        2: "Other",
+        3: "Other",
+        2: "Inundated",
         1: "Not inundated"
     }
 
