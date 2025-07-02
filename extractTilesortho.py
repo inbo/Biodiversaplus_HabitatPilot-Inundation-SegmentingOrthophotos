@@ -204,7 +204,7 @@ def extractAllTiles(folder, ext='.jpg'):
 
         # 1) make image file & path if necessary
         imgfile = '{}.{}'.format(uid, ext)
-        imgfile = outputfolder / 'Schulensmeer' / '2020' / imgfile # To adapt
+        #imgfile = outputfolder / 'Schulensmeer' / '2020' / imgfile # To adapt
         #imgfile = outputfolder / 'Schulensmeer' / '2021' / imgfile 
         #imgfile = outputfolder / 'Schulensmeer' / '2023' / imgfile 
         #imgfile = outputfolder / 'Schulensmeer' / '2024' / imgfile 
@@ -217,7 +217,7 @@ def extractAllTiles(folder, ext='.jpg'):
         #imgfile = outputfolder / 'Kloosterbeemden' / '2020' / imgfile 
         #imgfile = outputfolder / 'Kloosterbeemden' / '2021' / imgfile 
         #imgfile = outputfolder / 'Kloosterbeemden' / '2023' / imgfile 
-        #imgfile = outputfolder / 'Kloosterbeemden' / '2024' / imgfile 
+        imgfile = outputfolder / 'Kloosterbeemden' / '2024' / imgfile 
         
         
         
@@ -309,7 +309,7 @@ def extractAllTiles(folder, ext='.jpg'):
     allTiledf.to_file(tilefile)
 
     # and we make a backup
-    tilefile = os.path.join(outputfolder, 'backup', name_tile_file)
+    tilefile = os.path.join(outputfolder2, 'backup', name_tile_file)
     tilefile = tilefile.replace('.shp', datetime.now().strftime('__%d%m%Y_%H%M.shp'))
     allTiledf.to_file(tilefile)
 
@@ -390,9 +390,9 @@ def markTiles(folder, fLabels=0.1, nTiles=None, nLabelers=10):
 if __name__ == '__main__':
     load_dotenv()
     folder = os.environ['orthofolder']
-    name_tile_file = 'Tiles_ortho_SM_buffer.shp'
+    #name_tile_file = 'Tiles_ortho_SM_buffer.shp'
     #name_tile_file = 'Tiles_ortho_WB_buffer.shp'
-    #name_tile_file = 'Tiles_ortho_KB_buffer.shp'
+    name_tile_file = 'Tiles_ortho_KB_buffer.shp'
 
     bExtractLabelTiles = False
     if bExtractLabelTiles:
