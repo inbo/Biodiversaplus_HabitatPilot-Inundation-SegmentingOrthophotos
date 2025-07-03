@@ -80,7 +80,7 @@ def extractTileFiles(folder, ext='jpg'):
 
             if tile.shape[2] >= 3:
                 # tile = tile[..., :3] # RGB
-                tile = tile[..., [2, 1, 0]]  # BGR to RGB
+                tile = tile[..., [0, 1, 2]]  
                 tile = np.array(tile, dtype=np.uint8)
                 #tile = tile[..., [4,1,0]] # false color image
 
@@ -110,7 +110,7 @@ def extractTileFiles(folder, ext='jpg'):
 
             if tile.shape[2] >= 3:
                 # tile = tile[..., :3] # RGB
-                tile = tile[..., [2, 1, 0]]  # BGR to RGB
+                tile = tile[..., [0, 1, 2]]  
                 tile = np.array(tile, dtype=np.uint8)
                 #tile = tile[..., [4,1,0]] # false color image
 
@@ -137,7 +137,7 @@ def extractTileFiles(folder, ext='jpg'):
                     dest.write(tile)  # Write single-channel tile
 
                 elif num_channels >= 3:
-                    selected_bands = [2, 1, 0]  # Choose any three bands
+                    selected_bands = [0, 1, 2]  
 
                     if max(selected_bands) < num_channels:  # Ensure selected bands exist
                         new_tile = tile[selected_bands].astype(np.float32)  # Convert to 32-bit
@@ -218,7 +218,7 @@ def extractAllTiles(folder, ext='.jpg'):
 
             if tile.shape[2] >= 3:
                 # tile = tile[..., :3] # RGB
-                tile = tile[..., [2, 1, 0]]  # BGR to RGB4
+                tile = tile[..., [0, 1, 2]]
                 tile = np.array(tile, dtype=np.uint8)
                 #tile = tile[..., [4,1,0]] # false color image
 
@@ -248,7 +248,7 @@ def extractAllTiles(folder, ext='.jpg'):
 
             if tile.shape[2] >= 3:
                 # tile = tile[..., :3] # RGB
-                tile = tile[..., [2, 1, 0]]  # BGR to RGB
+                tile = tile[..., [0, 1, 2]]  
                 tile = np.array(tile, dtype=np.uint8)
                 #tile = tile[..., [4,1,0]] # false color image
 
@@ -275,7 +275,7 @@ def extractAllTiles(folder, ext='.jpg'):
                     dest.write(tile)  # Write single-channel tile
 
                 elif num_channels >= 3:
-                    selected_bands = [2, 1, 0]  # Choose any three bands
+                    selected_bands = [0, 1, 2]  # Choose any three bands
 
                     if max(selected_bands) < num_channels:  # Ensure selected bands exist
                         new_tile = tile[selected_bands].astype(np.float32)  # Convert to 32-bit
