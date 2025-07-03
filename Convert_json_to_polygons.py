@@ -142,10 +142,31 @@ def main():
 
 if __name__ == "__main__":
     load_dotenv()
+    image_dir = Path(os.environ["Tilelocation"])
     workdir = Path(os.environ["workdirectory"])
-    folder_path = workdir / 'Images' / 'All'
-    tiles_path = workdir / 'Tiles_ortho.shp'
-    output_file = workdir / 'Labels.shp'
+    
+    folder_path = image_dir / 'Kloosterbeemden' / '2020'
+    #folder_path = image_dir / 'Kloosterbeemden' / '2021'
+    #folder_path = image_dir / 'Kloosterbeemden' / '2023'
+    #folder_path = image_dir / 'Kloosterbeemden' / '2024'
+
+    #folder_path = image_dir / 'Schulensmeer' / '2020'
+    #folder_path = image_dir / 'Schulensmeer' / '2021'
+    #folder_path = image_dir / 'Schulensmeer' / '2023'
+    #folder_path = image_dir / 'Schulensmeer' / '2024'
+    
+    #folder_path = image_dir / 'Webbekomsbroek' / '2020'
+    #folder_path = image_dir / 'Webbekomsbroek' / '2021'
+    #folder_path = image_dir / 'Webbekomsbroek' / '2023'
+    #folder_path = image_dir / 'Webbekomsbroek' / '2024'
+    
+    
+    tiles_path = workdir / 'Tiles_ortho_KB_buffer.shp'
+    #tiles_path = workdir / 'Tiles_ortho_SM_buffer.shp'
+    #tiles_path = workdir / 'Tiles_ortho_WB_buffer.shp'
+
+
+    output_file = workdir / 'Labels_KB_2020.shp'
 
     # Step 1: Transform JSON shapes to GeoDataFrame
     labels = process_json_and_save_geometries(tiles_path, folder_path)
