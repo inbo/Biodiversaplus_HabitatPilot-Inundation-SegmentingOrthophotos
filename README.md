@@ -22,7 +22,7 @@ pip install -r requirements.txt
 5. Label the images using labelme. Type following command in the terminal:
 
 ~~~shell
-labelme 
+labelme --labels labels.txt --flags flags.txt
 ~~~
 
 6. Convert_json_to_polygons.py: make shape file with labels.
