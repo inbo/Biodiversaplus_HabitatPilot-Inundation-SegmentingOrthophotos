@@ -27,3 +27,9 @@ labelme --labels labels.txt --flags flags.txt
 
 6. Convert_json_to_polygons.py: make shape file with labels.
 
+Extra scripts: 
+--------------
+
+7. Correct_imagedata_labels.py: If you want to re-use labels for cropped image tiles for subsequent years, delete the imageData path and chage it to null.
+8. organize_labemeflags.py: Structure you images and labels based on the flags.
+
