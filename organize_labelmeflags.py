@@ -50,5 +50,6 @@ def process_labelme_folder(folder_path):
                 break  # Avoid moving the same file multiple times if multiple flags are True
 
 if __name__ == "__main__":
-    path = "G:/Gedeelde drives/Team_BioDiv/5_Projecten/2024_Biodiversa_habitatpilot/WP2_3/Inundation/Segmentation_orthos/Cropped_orthos_tiles/Kloosterbeemden/2020"
+    #path = "G:/Gedeelde drives/Team_BioDiv/5_Projecten/2024_Biodiversa_habitatpilot/WP2_3/Inundation/Segmentation_orthos/Cropped_orthos_tiles/Kloosterbeemden/2020"
+    path = "G:/Gedeelde drives/Team_BioDiv/5_Projecten/2024_Biodiversa_habitatpilot/WP2_3/Inundation/Segmentation_orthos/Cropped_orthos_tiles/Kloosterbeemden/2021"
     process_labelme_folder(path)
