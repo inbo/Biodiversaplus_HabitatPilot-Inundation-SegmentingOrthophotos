@@ -26,5 +26,6 @@ def remove_image_data_from_all_json(target_dir, recursive=True):
 # Replace with the path to your labelme annotation directory
 if __name__ == "__main__":
     #target_directory = "G:/Gedeelde drives/Team_BioDiv/5_Projecten/2024_Biodiversa_habitatpilot/WP2_3/Inundation/Segmentation_orthos/Cropped_orthos_tiles/Kloosterbeemden/2020"
-    target_directory = "G:/Gedeelde drives/Team_BioDiv/5_Projecten/2024_Biodiversa_habitatpilot/WP2_3/Inundation/Segmentation_orthos/Cropped_orthos_tiles/Kloosterbeemden/2021"
+    #target_directory = "G:/Gedeelde drives/Team_BioDiv/5_Projecten/2024_Biodiversa_habitatpilot/WP2_3/Inundation/Segmentation_orthos/Cropped_orthos_tiles/Kloosterbeemden/2021"
+    target_directory = "G:/Gedeelde drives/Team_BioDiv/5_Projecten/2024_Biodiversa_habitatpilot/WP2_3/Inundation/Segmentation_orthos/Cropped_orthos_tiles/Kloosterbeemden/2023"
     remove_image_data_from_all_json(target_directory)
