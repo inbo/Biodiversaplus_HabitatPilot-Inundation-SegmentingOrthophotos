@@ -45,28 +45,28 @@ def label_and_diff(processed):
 
     return pd.concat(merged, ignore_index=True)
 
-def subtract_tiles_and_add_uncertain(merged, tiles_path, original_labels):
+def subtract_tiles_and_add_not_inundated(merged, tiles_path, original_labels):
     tiles = gpd.read_file(tiles_path)
     tiles = fix_g(tiles)
     original_union = unary_union(original_labels.geometry)
     known_union = unary_union(merged.geometry)
 
-    uncertain_polys = []
+    not_inundated_polys = []
     for tile_geom in tiles.geometry:
         if not tile_geom.intersects(original_union):
             continue
 
         leftover = tile_geom.difference(known_union)
         if not leftover.is_empty:
-            uncertain_polys.append(leftover)
+            not_inundated_polys.append(leftover)
 
-    if uncertain_polys:
-        uncertain_gdf = gpd.GeoDataFrame(
-            {"Label": ["Uncertain"] * len(uncertain_polys), "geometry": uncertain_polys},
+    if not_inundated_polys:
+       not_inundated_gdf = gpd.GeoDataFrame(
+            {"Label": ["Not inundated"] * len(not_inundated_polys), "geometry": not_inundated_polys},
             crs=merged.crs
         )
-        uncertain_gdf = fix_g(uncertain_gdf)
-        merged = pd.concat([merged, uncertain_gdf], ignore_index=True)
+       not_inundated_gdf = fix_g(not_inundated_gdf)
+       merged = pd.concat([merged, not_inundated_gdf], ignore_index=True)
 
     return merged
 
@@ -131,14 +131,14 @@ def main():
     # Step 3: Remove overlaps and retain label priority
     merged = label_and_diff(processed)
 
-    # Step 4: Add "uncertain" label for leftover tile areas
+    # Step 4: Add "not inundated" label for leftover tile areas
     merged = merged.explode(index_parts=True).reset_index(drop=True)
     merged = merged[merged.geometry.type.isin(["Polygon", "MultiPolygon"])]
-    merged = subtract_tiles_and_add_uncertain(merged, tiles_path, labels)
+    merged = subtract_tiles_and_add_not_inundated(merged, tiles_path, labels)
 
     # Step 5: Export result
     merged.to_file(output_file)
-    print(f"Saved merged labels with 'uncertain' areas to: {output_file}")
+    print(f"Saved merged labels with 'Not inundated' areas to: {output_file}")
 
 if __name__ == "__main__":
     load_dotenv()
@@ -173,9 +173,10 @@ if __name__ == "__main__":
 
     # Step 2: Process label priority # Please ensure the names match your labels.
     label_map = {
+        4: "Inundated",
         3: "Other",
-        2: "Inundated",
-        1: "Not inundated"
+        2: "Reeds",
+        1: "Uncertain"
     }
 
     main()
