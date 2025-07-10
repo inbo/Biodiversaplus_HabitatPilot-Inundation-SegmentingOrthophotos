@@ -45,8 +45,7 @@ def label_and_diff(processed):
 
     return pd.concat(merged, ignore_index=True)
 
-def subtract_tiles_and_add_not_inundated(merged, tiles_path, original_labels):
-    tiles = gpd.read_file(tiles_path)
+def subtract_tiles_and_add_not_inundated(merged, tiles, original_labels):
     tiles = fix_g(tiles)
     original_union = unary_union(original_labels.geometry)
     known_union = unary_union(merged.geometry)
@@ -61,27 +60,23 @@ def subtract_tiles_and_add_not_inundated(merged, tiles_path, original_labels):
             not_inundated_polys.append(leftover)
 
     if not_inundated_polys:
-       not_inundated_gdf = gpd.GeoDataFrame(
+        not_inundated_gdf = gpd.GeoDataFrame(
             {"Label": ["Not inundated"] * len(not_inundated_polys), "geometry": not_inundated_polys},
             crs=merged.crs
         )
-       not_inundated_gdf = fix_g(not_inundated_gdf)
-       merged = pd.concat([merged, not_inundated_gdf], ignore_index=True)
+        not_inundated_gdf = fix_g(not_inundated_gdf)
+        merged = pd.concat([merged, not_inundated_gdf], ignore_index=True)
 
     return merged
 
 def process_json_and_save_geometries(shapefile_path, folder_path):
     tiles_df_all = gpd.read_file(shapefile_path)
 
-    # Get list of JSON base filenames (TileIDs)
     json_tile_ids = {f.replace(".json", "") for f in os.listdir(folder_path) if f.endswith(".json")}
-
-    # Filter tiles to keep only those with a corresponding JSON file
     tiles_df = tiles_df_all[tiles_df_all["TileID"].isin(json_tile_ids)]
 
     if tiles_df.empty:
         raise ValueError("No matching TileIDs found between shapefile and JSON files.")
-
 
     if "TileID" not in tiles_df.columns or tiles_df.geometry is None:
         raise ValueError("The shapefile must have a 'TileID' column and valid geometries.")
@@ -126,10 +121,9 @@ def process_json_and_save_geometries(shapefile_path, folder_path):
 
             transformed_shapes.append({"geometry": polygon, "Label": label})
 
-    return gpd.GeoDataFrame(transformed_shapes, crs=tiles_df.crs)
+    return gpd.GeoDataFrame(transformed_shapes, crs=tiles_df.crs), tiles_df
 
 def main():
-    
     processed = {}
     for idx, lbl in label_map.items():
         df = labels[labels["Label"] == lbl]
@@ -144,7 +138,7 @@ def main():
     # Step 4: Add "not inundated" label for leftover tile areas
     merged = merged.explode(index_parts=True).reset_index(drop=True)
     merged = merged[merged.geometry.type.isin(["Polygon", "MultiPolygon"])]
-    merged = subtract_tiles_and_add_not_inundated(merged, tiles_path, labels)
+    merged = subtract_tiles_and_add_not_inundated(merged, used_tiles, labels)
 
     # Step 5: Export result
     merged.to_file(output_file)
@@ -154,34 +148,21 @@ if __name__ == "__main__":
     load_dotenv()
     image_dir = Path(os.environ["Tilelocation"])
     workdir = Path(os.environ["workdirectory"])
-    
+
     folder_path = image_dir / 'Kloosterbeemden' / '2020'
-    #folder_path = image_dir / 'Kloosterbeemden' / '2021'
-    #folder_path = image_dir / 'Kloosterbeemden' / '2023'
-    #folder_path = image_dir / 'Kloosterbeemden' / '2024'
+    # folder_path = image_dir / 'Kloosterbeemden' / '2021'
+    # folder_path = image_dir / 'Schulensmeer' / '2023'
+    # folder_path = image_dir / 'Webbekomsbroek' / '2024'
 
-    #folder_path = image_dir / 'Schulensmeer' / '2020'
-    #folder_path = image_dir / 'Schulensmeer' / '2021'
-    #folder_path = image_dir / 'Schulensmeer' / '2023'
-    #folder_path = image_dir / 'Schulensmeer' / '2024'
-    
-    #folder_path = image_dir / 'Webbekomsbroek' / '2020'
-    #folder_path = image_dir / 'Webbekomsbroek' / '2021'
-    #folder_path = image_dir / 'Webbekomsbroek' / '2023'
-    #folder_path = image_dir / 'Webbekomsbroek' / '2024'
-    
-    
     tiles_path = workdir / 'Tiles_ortho_KB_buffer_selected.shp'
-    #tiles_path = workdir / 'Tiles_ortho_SM_buffer_selected.shp'
-    #tiles_path = workdir / 'Tiles_ortho_WB_buffer_selected.shp'
-
+    # tiles_path = workdir / 'Tiles_ortho_SM_buffer_selected.shp'
 
     output_file = workdir / 'Labels_KB_2020.shp'
 
-    # Step 1: Transform JSON shapes to GeoDataFrame
-    labels = process_json_and_save_geometries(tiles_path, folder_path)
+    # Step 1: Transform JSON shapes to GeoDataFrame & get only matching tiles
+    labels, used_tiles = process_json_and_save_geometries(tiles_path, folder_path)
 
-    # Step 2: Process label priority # Please ensure the names match your labels.
+    # Step 2: Define label priority
     label_map = {
         4: "Inundated",
         3: "Other",
