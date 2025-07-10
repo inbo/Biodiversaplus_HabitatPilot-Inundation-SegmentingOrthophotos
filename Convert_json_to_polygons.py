@@ -71,7 +71,17 @@ def subtract_tiles_and_add_not_inundated(merged, tiles_path, original_labels):
     return merged
 
 def process_json_and_save_geometries(shapefile_path, folder_path):
-    tiles_df = gpd.read_file(shapefile_path)
+    tiles_df_all = gpd.read_file(shapefile_path)
+
+    # Get list of JSON base filenames (TileIDs)
+    json_tile_ids = {f.replace(".json", "") for f in os.listdir(folder_path) if f.endswith(".json")}
+
+    # Filter tiles to keep only those with a corresponding JSON file
+    tiles_df = tiles_df_all[tiles_df_all["TileID"].isin(json_tile_ids)]
+
+    if tiles_df.empty:
+        raise ValueError("No matching TileIDs found between shapefile and JSON files.")
+
 
     if "TileID" not in tiles_df.columns or tiles_df.geometry is None:
         raise ValueError("The shapefile must have a 'TileID' column and valid geometries.")
