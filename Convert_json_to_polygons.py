@@ -161,9 +161,9 @@ if __name__ == "__main__":
     #folder_path = image_dir / 'Webbekomsbroek' / '2024'
     
     
-    tiles_path = workdir / 'Tiles_ortho_KB_buffer.shp'
-    #tiles_path = workdir / 'Tiles_ortho_SM_buffer.shp'
-    #tiles_path = workdir / 'Tiles_ortho_WB_buffer.shp'
+    tiles_path = workdir / 'Tiles_ortho_KB_buffer_selected.shp'
+    #tiles_path = workdir / 'Tiles_ortho_SM_buffer_selected.shp'
+    #tiles_path = workdir / 'Tiles_ortho_WB_buffer_selected.shp'
 
 
     output_file = workdir / 'Labels_KB_2020.shp'
