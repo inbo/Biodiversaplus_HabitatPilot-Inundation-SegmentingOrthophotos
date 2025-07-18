@@ -152,43 +152,44 @@ if __name__ == "__main__":
     #folder_path = image_dir / 'Kloosterbeemden' / '2020'
     #folder_path = image_dir / 'Kloosterbeemden' / '2021'
     #folder_path = image_dir / 'Kloosterbeemden' / '2023'
-    #folder_path = image_dir / 'Kloosterbeemden' / '2024'
+    folder_path = image_dir / 'Kloosterbeemden' / '2024'
 
-    folder_path = image_dir / 'Schulensmeer' / '2020'
+    #folder_path = image_dir / 'Schulensmeer' / '2020'
     #folder_path = image_dir / 'Schulensmeer' / '2021'
     #folder_path = image_dir / 'Schulensmeer' / '2023'
     #folder_path = image_dir / 'Schulensmeer' / '2024'
 
 
-    #tiles_path = workdir / 'Tiles_ortho_KB_buffer_selected.shp'
-    tiles_path = workdir / 'Tiles_ortho_SM_buffer_selected.shp'
+    tiles_path = workdir / 'Tiles_ortho_KB_buffer_selected.shp'
+    #tiles_path = workdir / 'Tiles_ortho_SM_buffer_selected.shp'
 
     #output_file = workdir / 'Labels_KB_2020.shp'
     #output_file = workdir / 'Labels_KB_2021.shp'
     #output_file = workdir / 'Labels_KB_2023.shp'
-    #output_file = workdir / 'Labels_KB_2024.shp'
+    output_file = workdir / 'Labels_KB_2024.shp'
 
-    output_file = workdir / 'Labels_SM_2020.shp'
-
+    #output_file = workdir / 'Labels_SM_2020.shp'
+    #output_file = workdir / 'Labels_SM_2021.shp'
     #output_file = workdir / 'Labels_SM_2023.shp'
+    #output_file = workdir / 'Labels_SM_2024.shp'
 
     # Step 1: Transform JSON shapes to GeoDataFrame & get only matching tiles
     labels, used_tiles = process_json_and_save_geometries(tiles_path, folder_path)
 
     # Step 2: Define label priority
-    #label_map = { # Labelmap for "Kloosterbeemden"
-    #    4: "Inundated",
-    #    3: "Other",
-    #    2: "Reeds",
-    #    1: "Uncertain"
-    #}
-
-    label_map = { # Labelmap for "Schulensmeer"
-        4: "Other",
-        3: "Reeds",
-        2: "Inundated",
+    label_map = { # Labelmap for "Kloosterbeemden"
+        4: "Inundated",
+        3: "Other",
+        2: "Reeds",
         1: "Uncertain"
     }
+
+    #label_map = { # Labelmap for "Schulensmeer"
+    #    4: "Other",
+    #    3: "Reeds",
+    #    2: "Inundated",
+    #    1: "Uncertain"
+    #}
 
 
     main()
