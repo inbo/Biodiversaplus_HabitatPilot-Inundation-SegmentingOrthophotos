@@ -205,9 +205,9 @@ def extractAllTiles(folder, ext='.jpg'):
         # 1) make image file & path if necessary
         imgfile = '{}.{}'.format(uid, ext)
         #imgfile = outputfolder / 'Schulensmeer' / '2020' / imgfile # To adapt
-        #imgfile = outputfolder / 'Schulensmeer' / '2021' / imgfile 
+        imgfile = outputfolder / 'Schulensmeer' / '2021' / imgfile 
         #imgfile = outputfolder / 'Schulensmeer' / '2023' / imgfile 
-        imgfile = outputfolder / 'Schulensmeer' / '2024' / imgfile 
+        #imgfile = outputfolder / 'Schulensmeer' / '2024' / imgfile 
 
         #imgfile = outputfolder / 'Webbekomsbroek' / '2020' / imgfile 
         #imgfile = outputfolder / 'Webbekomsbroek' / '2021' / imgfile 
